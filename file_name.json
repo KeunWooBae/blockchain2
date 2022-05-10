@@ -1,0 +1,71 @@
+{
+    "hash": "90cc67b1d71dcbb39cad3bd4bd77050454ce390ad870a0b42bc71faed8f646a0",
+    "ver": 1,
+    "vin_sz": 1,
+    "vout_sz": 2,
+    "size": 225,
+    "weight": 900,
+    "fee": 50000,
+    "relayed_by": "0.0.0.0",
+    "lock_time": 0,
+    "tx_index": 5639252785611768,
+    "double_spend": false,
+    "time": 1347651305,
+    "block_index": 198795,
+    "block_height": 198795,
+    "inputs": [
+        {
+            "sequence": 4294967295,
+            "witness": "",
+            "script": "473044022025021bc2302add39746cae5c4fa930209239c5618e672882e99986dcf53774a9022057481f569f734be991cb27b760111afe4cd997c29852e7a223ac534bbb68de40012103cc6063e45936c0f59222b2220b0ba3a166422953381abf3b90dd0d636e93369b",
+            "index": 0,
+            "prev_out": {
+                "tx_index": 2490825465088398,
+                "value": 1747537117190,
+                "n": 0,
+                "type": 0,
+                "spent": true,
+                "script": "76a914ea0b6429e724cbfe4b21a0fc00c23e46fb3b4c7c88ac",
+                "spending_outpoints": [
+                    {
+                        "tx_index": 5639252785611768,
+                        "n": 0
+                    }
+                ],
+                "addr": "1NLWmNJQbVbD5tS4QCLbEmJW2bMrR3KPoD"
+            }
+        }
+    ],
+    "out": [
+        {
+            "type": 0,
+            "spent": true,
+            "value": 1747454136690,
+            "spending_outpoints": [
+                {
+                    "tx_index": 1878142408784199,
+                    "n": 0
+                }
+            ],
+            "n": 0,
+            "tx_index": 5639252785611768,
+            "script": "76a914cab23ba74d3170df3a36481b1093db74d97e125788ac",
+            "addr": "1KUm1bdwK2EQMnHgTwp8UrNpSSUTzJ8j9z"
+        },
+        {
+            "type": 0,
+            "spent": true,
+            "value": 82930500,
+            "spending_outpoints": [
+                {
+                    "tx_index": 8127846661638687,
+                    "n": 307
+                }
+            ],
+            "n": 1,
+            "tx_index": 5639252785611768,
+            "script": "76a914ac8db740725e379a460941bb1f2288a0d916a2ef88ac",
+            "addr": "1GjNzapdNnTazKzPZkQxspK5YFQfnH7LJm"
+        }
+    ]
+}

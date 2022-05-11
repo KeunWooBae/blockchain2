@@ -118,7 +118,7 @@ f.write("inputAddr,outputAddr1,outputAddr2,inputBTC,outputBTC1,outputBTC2,peelin
 
 excel_len = len(address)
 print(excel_len)
-for x in range(1036, excel_len):
+for x in range(5249, excel_len):
     print("count : " + str(x))
     block.initAddressFromExcel(address[x][0])
     if block.errorflag == 200:

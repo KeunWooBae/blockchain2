@@ -27,15 +27,13 @@ class BlockChain:
         # with open('file_name2.json', 'w') as f:
         #     json.dump(self.addrData, f, indent=4)
 
-    def getAddrType(self):
-        if self.addrData['address'][0] == '1':
+    def getAddrType(self, addr):
+        if addr[0] == '1':
             return "P2PKH"
-        elif self.addrData['address'][0] == '3':
+        elif addr[0] == '3':
             return "P2SH"
         else:
             return "Bech32"
-
-        return self.addrData['address']
 
     def getTxHashList(self):
         txList = []
@@ -99,6 +97,20 @@ class BlockChain:
             return str((block.txData['out'][1]['value'] / 100000000) / (block.txData['out'][0]['value'] / 100000000))
 
 
+    def isPrevTxChain(self):
+        if self.txData['out'][0]['addr'] == self.addrData['address']:
+            if self.txData['out'][0]['value'] > self.txData['out'][1]['value']:
+                if self.getAddrType(self.txData['out'][0]['addr']) == self.getAddrType(self.addrData['address']):
+                    return True
+            return False
+
+        elif self.txData['out'][1]['addr'] == self.addrData['address']:
+            if self.txData['out'][1]['value'] > self.txData['out'][0]['value']:
+                if self.getAddrType(self.txData['out'][1]['addr']) == self.getAddrType(self.addrData['address']):
+                    return True
+            return False
+
+
 
 header = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36',
@@ -108,17 +120,18 @@ block = BlockChain()
 
 #bring address from excel file
 location = "D:\python"
-file = "투자사기_지갑주소.xlsx"
+file = "투자사기 peelchain.xlsx"
 data_pd = pd.read_excel('{}/{}'.format(location, file), header=None, index_col=None, names=None)
 address = pd.DataFrame.to_numpy(data_pd)
 now = time.localtime()
 date = "%d%02d%02d%0d%02d%02d" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
-f = open('D:\python\투자사기_peelchain' + date + '.csv', 'a')
+f = open('D:\python\투자사기_peelchain2_' + date + '.csv', 'a')
 f.write("inputAddr,outputAddr1,outputAddr2,inputBTC,outputBTC1,outputBTC2,peeling ratio,TxTime,Fee,Address Type\n")
 
 excel_len = len(address)
 print(excel_len)
-for x in range(5249, excel_len):
+
+for x in range(1, excel_len):
     print("count : " + str(x))
     block.initAddressFromExcel(address[x][0])
     if block.errorflag == 200:
@@ -131,7 +144,7 @@ for x in range(5249, excel_len):
             if txNum == 2:
                 if block.isPeelingChainCurr() == True:
                     block.initHashInfo(txhash2)
-                    if block.isPeelingChainPrev() == True:
+                    if block.isPeelingChainPrev() == True and block.isPrevTxChain() == True:
                         block.initHashInfo(txhash1)
                         print("PEEL CHAIN!")
                         print("input : " + block.addrData['address'])
@@ -145,7 +158,7 @@ for x in range(5249, excel_len):
                         txTime = datetime.datetime.fromtimestamp(uTime)
                         print("Time : " + str(txTime))
                         print("Fee : " + str(block.txData['fee']))
-                        addrType = block.getAddrType()
+                        addrType = block.getAddrType(block.addrData['address'])
                         print("Current address(input) Type : " + addrType)
 
                         f.write(

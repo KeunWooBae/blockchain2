@@ -120,12 +120,12 @@ block = BlockChain()
 
 #bring address from excel file
 location = "D:\python"
-file = "투자사기 peelchain.xlsx"
+file = "투자사기_peelchain_ver 1.0.xlsx"
 data_pd = pd.read_excel('{}/{}'.format(location, file), header=None, index_col=None, names=None)
 address = pd.DataFrame.to_numpy(data_pd)
 now = time.localtime()
 date = "%d%02d%02d%0d%02d%02d" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
-f = open('D:\python\투자사기_peelchain2_' + date + '.csv', 'a')
+f = open('D:\python\투자사기_peelchain3_originToPeel_' + '.csv', 'a')
 f.write("inputAddr,outputAddr1,outputAddr2,inputBTC,outputBTC1,outputBTC2,peeling ratio,TxTime,Fee,Address Type\n")
 
 excel_len = len(address)
@@ -133,45 +133,49 @@ print(excel_len)
 # address = "17TroTGkxiCQniuqCyFdZ7a3ghX4HUsyvS"
 
 for x in range(1, excel_len):
+    f = open('D:\python\투자사기_peelchain3_originToPeel_' + '.csv', 'a')
+
     print("count : " + str(x))
     block.initAddressFromExcel(address[x][0]) #
-    # if block.errorflag == 200:
+    if block.errorflag == 200:
         # address = "17TroTGkxiCQniuqCyFdZ7a3ghX4HUsyvS"
-    txList = block.getTxHashList()
-    txNum = len(txList)
-    if txNum == 2:
-        txhash1, txhash2 = txList[0], txList[1]
-        # block.initHashInfo(txhash1)
-        # if txNum == 2:
-        #     if block.isPeelingChainCurr() == True:
-        block.initHashInfo(txhash2)
-        if block.isPeelingChainPrev() == True and block.isPrevTxChain() == True:
+        txList = block.getTxHashList()
+        txNum = len(txList)
+        if txNum == 2:
+            txhash1, txhash2 = txList[0], txList[1]
             block.initHashInfo(txhash1)
+            if txNum == 2:
+                if block.isPeelingChainCurr() == True:
+                    block.initHashInfo(txhash2)
+                    if block.isPeelingChainPrev() == True and block.isPrevTxChain() == True:
+                        block.initHashInfo(txhash1)
 
-            print("PEEL CHAIN!")
-            print("input : " + block.addrData['address'])
-            print("output : " + block.txData['out'][0]['addr'] + ', ' + block.txData['out'][1]['addr'])
-            print("input BTC : " + str(block.txData['inputs'][0]['prev_out']['value'] / 100000000))
-            print("output BTC : " + str(block.txData['out'][0]['value'] / 100000000) + ", " + str(
-                block.txData['out'][1]['value'] / 100000000))
-            ratio = block.getPeelingRatio()
-            print("ratio : " + ratio + " : 1")
-            uTime = block.txData['time']
-            txTime = datetime.datetime.fromtimestamp(uTime)
-            print("Time : " + str(txTime))
-            print("Fee : " + str(block.txData['fee']))
-            addrType = block.getAddrType(block.addrData['address'])
-            print("Current address(input) Type : " + addrType)
+                        print("PEEL CHAIN!")
+                        print("input : " + block.addrData['address'])
+                        print("output : " + block.txData['out'][0]['addr'] + ', ' + block.txData['out'][1]['addr'])
+                        print("input BTC : " + str(block.txData['inputs'][0]['prev_out']['value'] / 100000000))
+                        print("output BTC : " + str(block.txData['out'][0]['value'] / 100000000) + ", " + str(
+                            block.txData['out'][1]['value'] / 100000000))
+                        ratio = block.getPeelingRatio()
+                        print("ratio : " + ratio + " : 1")
+                        uTime = block.txData['time']
+                        txTime = datetime.datetime.fromtimestamp(uTime)
+                        print("Time : " + str(txTime))
+                        print("Fee : " + str(block.txData['fee']))
+                        addrType = block.getAddrType(block.addrData['address'])
+                        print("Current address(input) Type : " + addrType)
 
-            f.write(
-                block.addrData['address'] + "," + block.txData['out'][0]['addr'] + "," + block.txData['out'][1][
-                    'addr'] + "," +
-                str(block.txData['inputs'][0]['prev_out']['value'] / 100000000) + "," + str(
-                    block.txData['out'][0]['value'] / 100000000) + "," +
-                str(block.txData['out'][1]['value'] / 100000000) + "," + ratio + " : " + "1" + "," +
-                str(txTime) + "," + str(block.txData['fee']) + "," + addrType + "\n")
-
+                        f.write(
+                            block.addrData['address'] + "," + block.txData['out'][0]['addr'] + "," + block.txData['out'][1][
+                                'addr'] + "," +
+                            str(block.txData['inputs'][0]['prev_out']['value'] / 100000000) + "," + str(
+                                block.txData['out'][0]['value'] / 100000000) + "," +
+                            str(block.txData['out'][1]['value'] / 100000000) + "," + ratio + " : " + "1" + "," +
+                            str(txTime) + "," + str(block.txData['fee']) + "," + addrType + "\n")
+                        f.close()
     else:
+        f.write("error at" + "," + str(x) + "\n")
+        f.close()
         continue
 
 

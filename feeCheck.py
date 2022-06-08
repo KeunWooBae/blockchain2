@@ -105,7 +105,7 @@ block = BlockChain()
 # now = time.localtime()
 # date = "%d%02d%02d%0d%02d%02d" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
 f = open('D:\python\투자사기_fee_cluster' + '.csv', 'a')
-f.write("inputAddr,TxTime,Fee,Address Type\n")
+f.write("inputAddr,TxTime,Fee,Address Type,BTC received, BTC sent, BTC Balance\n")
 
 # excel_len = len(address)
 # print(excel_len)
@@ -123,20 +123,22 @@ for x in range(1, 100000):
     print("count : " + str(x))
     block.initAddressFromExcel(address)  #
     if block.errorflag == 200:
-        if block.isSingleInput() == True and block.isMultiOutput() == True:
-            if block.noSelfAddress() == True:
-                if block.isNewTx() == True:
-                    print("PEEL CHAIN!")
-                    print("input : " + block.addrData['address'])
-                    uTime = block.addrData['txs'][0]['time']
-                    txTime = datetime.datetime.fromtimestamp(uTime)
-                    print("Time : " + str(txTime))
-                    print("Fee : " + str(block.addrData['txs'][1]['fee']))
-                    addrType = block.getAddrType(block.addrData['address'])
-                    f.write(block.addrData['address'] + "," + str(txTime) + "," + str(block.addrData['txs'][0]['fee']) +
-                            "," + addrType + "," + str(x) + "," + "\n")
-                    f.close()
-                    address = block.getNextAddr()
+        if block.isSingleInput() == True and block.isMultiOutput() == True and block.noSelfAddress() == True and block.isNewTx() == True:
+            print("PEEL CHAIN!")
+            print("input : " + block.addrData['address'])
+            uTime = block.addrData['txs'][0]['time']
+            txTime = datetime.datetime.fromtimestamp(uTime)
+            print("Time : " + str(txTime))
+            print("Fee : " + str(block.addrData['txs'][1]['fee']))
+            print("BTC received : " + str(block.addrData['total_received'] / 100000000))
+            print("BTC sent : " + str(block.addrData['total_sent'] / 100000000))
+            print("BTC balance : " + str(block.addrData['final_balance'] / 100000000))
+            addrType = block.getAddrType(block.addrData['address'])
+            f.write(block.addrData['address'] + "," + str(txTime) + "," + str(block.addrData['txs'][0]['fee']) +
+                    "," + addrType + "," + str(block.addrData['total_received'] / 100000000) + "," + str(block.addrData['total_sent'] / 100000000) + "," + str(block.addrData['final_balance'] / 100000000) + "," + str(x) +"\n")
+            f.close()
+            address = block.getNextAddr()
+
         else:
             f.write("stop at" + "," + str(x) + "\n")
             f.close()

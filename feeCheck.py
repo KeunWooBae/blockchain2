@@ -110,7 +110,7 @@ f.write("inputAddr,TxTime,Fee,Address Type,BTC received, BTC sent, BTC Balance\n
 # excel_len = len(address)
 # print(excel_len)
 addressList = ["1LABwuafbMBR2JCFW8bSkjDZw751TvBBnh", "1HxXzcqDvifwS216KgBReCC41isZZoD7bE", "1BNW8NoaUo1CbqLAUvZU4nozREjaoV23vS", "12L371NEwKBQUzBkur1h51t9KYBbcKky6y", "1CGwKSqa5GSvaBuobyqW2THxVcTFVefKY2", "1PYeFkUGEqKiCPFabyfbSPBEHj5x1RymdV", "1A7WfZasYHr6WSFj6dfyX4bieUaE5ieaj6",
-               "19JTyZxsm6dxXu8TWXNFDg4CrajMPaNJzB", "1MX6jbuTmXAs79q2oNVhp4vLNJ3EEHEGZe", "14pLa356zaqMKCLvmtjCRHVwLRhhxQR8dG", "1E3Gudip2j1whLBxiVF5vA4knEvBhwhcJ7", "15oDEnmYDzktRFYCof7BXrQrt4iYyxqQmy", "1E4joeSALgDC5hyfhX8mXAqzSivynKwwzF", "1Bp4U7WWvzxXshiM7e12xNypfDcnN8ShD2,",
+               "19JTyZxsm6dxXu8TWXNFDg4CrajMPaNJzB", "1MX6jbuTmXAs79q2oNVhp4vLNJ3EEHEGZe", "14pLa356zaqMKCLvmtjCRHVwLRhhxQR8dG", "1E3Gudip2j1whLBxiVF5vA4knEvBhwhcJ7", "15oDEnmYDzktRFYCof7BXrQrt4iYyxqQmy", "1E4joeSALgDC5hyfhX8mXAqzSivynKwwzF", "1Bp4U7WWvzxXshiM7e12xNypfDcnN8ShD2",
                "1Js8hfCu4o3Sa7v1ss4GyVJSs3GgZXzAmq", "13AsNAfKyYGF5V5Fs7mRmXogZX1Xzzkptu", "18HqBkA8eKmkCp1uDPnJDwVvgF8x6rSsJ", "1B6joK3LVmSkiRTWHNn8rjnPrQzFkWR82h", "1EgYRFU7ACVPk5bV4FF8DhhUiK23Py9uxy", "1EW1qeku3S214fg37uCYzivxnnvttYM5rh", "18cZjN9EGYgb59h6PDCZj43cj3bko2Ba8a",
                "18rcPi5sxwWz1rsBUfv7Duzj43btNc5Ezg", "14KV7zA57eyCS9bVCe6mM54F7r3UKpNths"]
 # address = "1AABsVPPRHH7CZ1SKa56xwG2BrdNZ3FMoE"

@@ -1,12 +1,5 @@
 import requests, json
-import pandas as pd
-import numpy as np
-import networkx as nx
-from networkx.drawing.nx_agraph import write_dot, graphviz_layout
-import matplotlib.pyplot as plt
 import datetime, time
-import openpyxl as xl
-import csv
 
 class BlockChain:
 
@@ -19,10 +12,10 @@ class BlockChain:
         self.flag = 0
 
     def initAddressFromExcel(self, address):
+        time.sleep(8)
         url = requests.get("https://blockchain.info/rawaddr/" + address, headers=self.header)
         print("initAddress 상태코드1 : " + str(url.status_code))
         text = url.text
-        time.sleep(5)
         self.addrData = json.loads(text)
         self.currentAddr = self.addrData['address']
         self.errorflag = url.status_code
@@ -30,14 +23,14 @@ class BlockChain:
         #     json.dump(self.addrData, f, indent=4)
 
     def initAddress(self, address, address2):
-        time.sleep(5)
+        time.sleep(8)
         url = requests.get("https://blockchain.info/rawaddr/" + address, headers=self.header)
         print("initAddress 상태코드2 : " + str(url.status_code))
         text = url.text
         self.first = json.loads(text)
 
-        time.sleep(5)
-        url = requests.get("https://blockchain.info/rawaddr/" + address, headers=self.header)
+        time.sleep(8)
+        url = requests.get("https://blockchain.info/rawaddr/" + address2, headers=self.header)
         print("initAddress 상태코드3 : " + str(url.status_code))
         text = url.text
         self.second = json.loads(text)
@@ -104,15 +97,34 @@ class BlockChain:
         else:
             return secondAddress
 
+    def isPeelChain1(self):
+        if len(self.first['txs'][0]['out']) == 2 and len(self.first['txs'][0]['inputs']) == 1:
+            return True
+        else:
+            return False
+
+    def isPeelChain2(self):
+        if len(self.second['txs'][0]['out']) == 2 and len(self.second['txs'][0]['inputs']) == 1:
+            return True
+        else:
+            return False
+
     def getNextAddr2(self):
         firstAddress = self.addrData['txs'][0]['out'][0]['addr']
         secondAddress = self.addrData['txs'][0]['out'][1]['addr']
         self.initAddress(firstAddress, secondAddress)
 
         if len(self.first['txs']) == 2 and len(self.second['txs']) == 2:
-            if self.first['txs'][0]['out'][0]['value'] > self.second['txs'][0]['out'][1]['value']:
+            if self.isPeelChain1() == True and self.isPeelChain2() == True:
+                if self.first['total_received'] > self.second['total_received']:
+                    return firstAddress
+                else:
+                    return secondAddress
+
+            elif self.isPeelChain1() == True:
                 return firstAddress
-            else:
+
+            elif self.isPeelChain2() == True:
                 return secondAddress
 
         elif len(self.first['txs']) == 2:
@@ -136,7 +148,7 @@ block = BlockChain()
 # address = pd.DataFrame.to_numpy(data_pd)
 # now = time.localtime()
 # date = "%d%02d%02d%0d%02d%02d" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
-f = open('D:\python\투자사기_fee_cluster2' + '.csv', 'a')
+f = open('D:\python\투자사기_fee_cluster2_version3' + '.csv', 'a')
 f.write("inputAddr,TxTime,Fee,Address Type,BTC received, BTC sent, BTC Balance\n")
 
 # excel_len = len(address)
@@ -151,7 +163,7 @@ start = 0
 
 for x in range(1, 100000):
 
-    f = open('D:\python\투자사기_fee_cluster2' + '.csv', 'a')
+    f = open('D:\python\투자사기_fee_cluster2_version3' + '.csv', 'a')
     print("count : " + str(x))
     block.initAddressFromExcel(address)  #
     if block.errorflag == 200:
@@ -169,15 +181,17 @@ for x in range(1, 100000):
             f.write(block.addrData['address'] + "," + str(txTime) + "," + str(block.addrData['txs'][0]['fee']) +
                     "," + addrType + "," + str(block.addrData['total_received'] / 100000000) + "," + str(block.addrData['total_sent'] / 100000000) + "," + str(block.addrData['final_balance'] / 100000000) + "," + str(x) +"\n")
             f.close()
-            address = block.getNextAddr()
+            address = block.getNextAddr2()
 
         else:
+            print("STOP")
             f.write("stop at" + "," + str(x) + "\n")
             f.close()
             start += 1
             address = addressList[start]
 
     else:
+        print("ERROR")
         f.write("error at" + "," + str(x) + "\n")
         f.close()
         start += 1
@@ -185,4 +199,6 @@ for x in range(1, 100000):
         continue
 
 
+
 f.close()
+
